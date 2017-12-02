@@ -27,7 +27,7 @@ public class PrimaryPresenter extends GluonPresenter<DiscHub> {
                 AppBar appBar = getApp().getAppBar();
                 appBar.setNavIcon(MaterialDesignIcon.MENU.button(e -> 
                         getApp().showLayer(DRAWER_LAYER)));
-                appBar.setTitleText("Primary");
+                appBar.setTitleText("Welcome "+DiscHub.getUserCredentials().getUserScreenName());
                 //appBar.setVisible(false);
             }
         });
