@@ -7,7 +7,7 @@ import com.dischub.DiscHub;
 import com.dischub.login.UserCredentials;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
@@ -15,15 +15,21 @@ public class LoginPresenter extends GluonPresenter<DiscHub> {
 
     @FXML
     private View primary;
-
-    @FXML
-    private Label label;
     
     @FXML
     private TextField txfEmail;
     
     @FXML
     private PasswordField pwdPassword;
+    
+    @FXML
+    private Button btnLogin;
+    
+    @FXML
+    private Button btnCreateAccount;
+    
+    @FXML
+    private Button btnResetPassword;
 
     @FXML
     private ResourceBundle resources;
@@ -43,8 +49,8 @@ public class LoginPresenter extends GluonPresenter<DiscHub> {
 
     @FXML
     void buttonClick() {
-        if(validUserName(txfEmail.getText())){
-            if(passwordValid(pwdPassword.getText())){
+        if(isValidUserName(txfEmail.getText())){
+            if(isPasswordValid(pwdPassword.getText())){
                 DiscHub.setUserCredentials(new UserCredentials(txfEmail.getText(), encryptedPasswordString,"Rowan"/*db.query*/, 0));
                 AppViewManager.PRIMARY_VIEW.switchView();
                 
@@ -52,13 +58,24 @@ public class LoginPresenter extends GluonPresenter<DiscHub> {
         }
         
     }
+    
+    @FXML
+    void createAccount(){
+        //Navigate to new screen to make an account.
+        System.out.println("Requested create new login");
+    }
+    
+    @FXML
+    void resetPassword(){
+        //Will need to think of the best way to do that!
+    }
 
-    private boolean validUserName(String text) {
+    private boolean isValidUserName(String text) {
         //Database.query();
         return true;
     }
 
-    private boolean passwordValid(String text) {
+    private boolean isPasswordValid(String text) {
        //query datatbase
         return true;
     }

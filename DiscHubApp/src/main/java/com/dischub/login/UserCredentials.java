@@ -16,6 +16,7 @@ public class UserCredentials {
         userPassword = password;
         userScreenName = screenName;
         userExperience = experience;
+        
     }
 
     /**
