@@ -54,7 +54,7 @@
                   <PasswordField fx:id="pwdConfirmPassword" />
                </children>
             </HBox>
-            <Label fx:id="label" text="%label.text.1" />
+            <Label fx:id="lblInfo" text="%label.text.1" />
             <Button fx:id="btnLogin" mnemonicParsing="false" onAction="#buttonClick" text="%button.text" />
          </children>
       </VBox>
