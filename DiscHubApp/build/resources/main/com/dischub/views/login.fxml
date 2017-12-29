@@ -35,8 +35,9 @@
                </children>
             </HBox>
             <Label fx:id="label" text="%label.text.1" />
-            <Button mnemonicParsing="false" onAction="#buttonClick" text="%button.text" />
-            <Button mnemonicParsing="false" onAction="#createAccount" text="%button2.text" />
+            <Button fx:id="btnLogin" mnemonicParsing="false" onAction="#buttonClick" text="%button.text" />
+            <Button fx:id="btnCreateAccount" mnemonicParsing="false" onAction="#createAccount" text="%button2.text" />
+            <Button fx:id="btnResetPassword" mnemonicParsing="false" onAction="#resetPassword" text="%button3.text" />
          </children>
       </VBox>
    </center>

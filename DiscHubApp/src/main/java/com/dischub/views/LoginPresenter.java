@@ -63,6 +63,7 @@ public class LoginPresenter extends GluonPresenter<DiscHub> {
     void createAccount(){
         //Navigate to new screen to make an account.
         System.out.println("Requested create new login");
+        AppViewManager.CREATE_ACCOUNT_VIEW.switchView();
     }
     
     @FXML

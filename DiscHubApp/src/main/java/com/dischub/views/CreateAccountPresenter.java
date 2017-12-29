@@ -20,6 +20,9 @@ public class CreateAccountPresenter extends GluonPresenter<DiscHub> {
     private TextField txfEmail;
     
     @FXML
+    private TextField txfScreenName;
+    
+    @FXML
     private PasswordField pwdPassword;
     
     @FXML
@@ -55,24 +58,20 @@ public class CreateAccountPresenter extends GluonPresenter<DiscHub> {
         if(isValidUserName(txfEmail.getText())){
             if(isPasswordValid(pwdPassword.getText())){
                 DiscHub.setUserCredentials(new UserCredentials(txfEmail.getText(), encryptedPasswordString,"Rowan"/*db.query*/, 0));
-                AppViewManager.PRIMARY_VIEW.switchView();
+                createAccount();
+                //AppViewManager.PRIMARY_VIEW.switchView();
                 
             }
         }
         
     }
-    
-    @FXML
-    void createAccount(){
+        
+    private void createAccount(){
         //Navigate to new screen to make an account.
-        System.out.println("Requested create new login");
+        System.out.println("Requested create new login \n Name: "+txfScreenName.getText()+" \n uname: "+txfEmail.getText()+" \n Password: "+pwdPassword.getText());
+        AppViewManager.LOGIN_VIEW.switchView();
     }
     
-    @FXML
-    void resetPassword(){
-        //Will need to think of the best way to do that!
-    }
-
     private boolean isValidUserName(String text) {
         //Database.query();
         return true;
