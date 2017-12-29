@@ -5,10 +5,6 @@ import com.gluonhq.charm.glisten.control.AppBar;
 import com.gluonhq.charm.glisten.mvc.View;
 import com.dischub.DiscHub;
 import com.dischub.login.UserCredentials;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,8 +13,15 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
 
+/**
+ * Class which handles UI interaction with a form for making a new user. This
+ * class will check the user email is not already registered, that the password
+ * is valid and will create a new account for the new user. Upon creation of a
+ * new account, the graphics will confirm this before logging the user in.
+ *
+ * @author rodtr
+ */
 public class CreateAccountPresenter extends GluonPresenter<DiscHub> {
 
     @FXML
@@ -41,8 +44,6 @@ public class CreateAccountPresenter extends GluonPresenter<DiscHub> {
 
     @FXML
     private ResourceBundle resources;
-
-    private String encryptedPasswordString;
 
     public void initialize() {
 
