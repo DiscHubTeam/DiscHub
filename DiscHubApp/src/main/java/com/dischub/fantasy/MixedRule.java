@@ -1,4 +1,4 @@
-package com.dischub.tournament;
+package com.dischub.fantasy;
 
 /**
  *

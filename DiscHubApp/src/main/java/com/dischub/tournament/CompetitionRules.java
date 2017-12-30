@@ -1,5 +1,8 @@
 package com.dischub.tournament;
 
+import com.dischub.fantasy.MixedRule;
+import com.dischub.fantasy.TeamRule;
+
 /**
  *
  * @author Rowan
