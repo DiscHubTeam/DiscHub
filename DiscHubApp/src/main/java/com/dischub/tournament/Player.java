@@ -17,6 +17,11 @@ public class Player {
         name = inputtedName;
     }
 
+    public Player(String name, String shirtNum){
+        this.name=name;
+        this.shirtNum=shirtNum;
+    }
+    
     /**
      * @return the name
      */

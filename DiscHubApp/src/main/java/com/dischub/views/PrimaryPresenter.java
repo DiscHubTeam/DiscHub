@@ -20,22 +20,21 @@ public class PrimaryPresenter extends GluonPresenter<DiscHub> {
 
     @FXML
     private ResourceBundle resources;
-    
+
     public void initialize() {
         primary.showingProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue) {
                 AppBar appBar = getApp().getAppBar();
-                appBar.setNavIcon(MaterialDesignIcon.MENU.button(e -> 
-                        getApp().showLayer(DRAWER_LAYER)));
-                appBar.setTitleText("Welcome "+DiscHub.getUserCredentials().getUserScreenName());
-                //appBar.setVisible(false);
+                appBar.setNavIcon(MaterialDesignIcon.MENU.button(e
+                        -> getApp().showLayer(DRAWER_LAYER)));
+                appBar.setTitleText("Welcome " + DiscHub.getUserCredentials().getUserScreenName());
             }
         });
     }
-    
+
     @FXML
     void buttonClick() {
         label.setText(resources.getString("label.text.2"));
     }
-    
+
 }
