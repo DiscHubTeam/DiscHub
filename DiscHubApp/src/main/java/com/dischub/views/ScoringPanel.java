@@ -55,6 +55,9 @@ public class ScoringPanel extends GluonPresenter<DiscHub> {
     private int teamAScore = 0;
     private int teamBScore = 0;
 
+    private Player[] teamARoster;
+    private Player[] teamBRoster;
+
     private Point tempPoint;
 
     private ArrayList<Point> points = new ArrayList<>();
@@ -63,6 +66,10 @@ public class ScoringPanel extends GluonPresenter<DiscHub> {
         scoringPanel.setShowTransitionFactory(BounceInRightTransition::new);
         lblTeamAName.setText(teamA.getTeamName());
         lblTeamBName.setText(teamB.getTeamName());
+
+        teamARoster = getTeamRoster(teamA);
+        teamBRoster = getTeamRoster(teamB);
+
         scoringPanel.showingProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue) {
                 AppBar appBar = getApp().getAppBar();
@@ -142,26 +149,39 @@ public class ScoringPanel extends GluonPresenter<DiscHub> {
 
     }
 
+    /**
+     * If the team roster has not been loaded, loads the roster from the
+     * database. If it is held locally, the database is not queried.
+     *
+     * @param team the team whose roster is requested
+     * @return an array of players (aka a roster)
+     */
     private Player[] getTeamRoster(Team team) {
-        //queryDatabase for players;
-        Player[] roster;
-        if (team.getTeamName().equals("Poole")) {
-            roster = new Player[10];
-            int i = 0;
-            for (Player p : roster) {
-                p = new Player("Poole Player " + i, Integer.toString(i + 10));
-                roster[i]=p;
-                i++;
-            }
+        if (team == teamA && teamARoster != null) {
+            return teamARoster;
+        } else if (team == teamB && teamBRoster != null) {
+            return teamBRoster;
         } else {
-            roster = new Player[10];
-            int i = 0;
-            for (Player p : roster) {
-                p = new Player("Heat Player " + i, Integer.toString(i + 40));
-                roster[i]=p;
-                i++;
+            //queryDatabase for players;
+            Player[] roster;
+            if (team.getTeamName().equals("Poole")) {
+                roster = new Player[10];
+                int i = 0;
+                for (Player p : roster) {
+                    p = new Player("Poole Player " + i, Integer.toString(i + 10));
+                    roster[i] = p;
+                    i++;
+                }
+            } else {
+                roster = new Player[10];
+                int i = 0;
+                for (Player p : roster) {
+                    p = new Player("Heat Player " + i, Integer.toString(i + 40));
+                    roster[i] = p;
+                    i++;
+                }
             }
+            return roster;
         }
-        return roster;
     }
 }
