@@ -1,11 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.dischub.scoring;
 
 import com.dischub.tournament.Player;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  *
@@ -56,6 +53,10 @@ public class Point {
         this.timeOfScoreMillis = System.currentTimeMillis();
     }
     
-    
+    @Override
+    public String toString(){
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        return this.assister.getName()+" to "+ this.scorer.getName() +" at "+sdf.format(new Date(timeOfScoreMillis));
+    }
     
 }

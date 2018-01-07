@@ -15,6 +15,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
@@ -43,9 +44,15 @@ public class ScoringPanel extends GluonPresenter<DiscHub> {
 
     @FXML
     private Label lblTeamBScore;
+    
+    @FXML
+    private Label lblFeedback;
 
     @FXML
     private VBox vbxBackingPane;
+
+    @FXML
+    private AnchorPane ancPlayerGrid;
 
     private GridPane playerGrid;
 
@@ -83,19 +90,31 @@ public class ScoringPanel extends GluonPresenter<DiscHub> {
 
     @FXML
     private void teamAScore() {
+        btnTeamAScore.setDisable(true);
+        btnTeamBScore.setDisable(true);
         drawAssistGrid(teamA);
     }
 
     @FXML
     private void teamBScore() {
+        btnTeamAScore.setDisable(true);
+        btnTeamBScore.setDisable(true);
         drawAssistGrid(teamB);
     }
 
-    private void drawAssistGrid(Team team) {
-        int rowCount = getTeamRoster(team).length / 4;
-        playerGrid = new GridPane();
+    @FXML
+    private void endGame() {
+        System.out.println("The Game Ended " + teamA.getTeamName() + ":" + teamAScore + " v " + teamB.getTeamName() + ":" + teamBScore);
+        for (Point pnt : points) {
+            System.out.println(pnt.toString());
+        }
+    }
 
+    private void drawAssistGrid(Team team) {
+        playerGrid = new GridPane();
+        lblFeedback.setText("Select the Assister");
         Button btnCallaghan = new Button("Callaghan");
+        btnCallaghan.setPrefWidth(1000);
         btnCallaghan.setOnAction((ActionEvent ae) -> {
             playerClicked(null, team);
             btnCallaghan.setDisable(true);
@@ -104,6 +123,7 @@ public class ScoringPanel extends GluonPresenter<DiscHub> {
         for (int i = 0; i < getTeamRoster(team).length - 1; i++) {
             Player player = getTeamRoster(team)[i];
             Button b = new Button(player.getShirtNum());
+            b.setPrefWidth(1000);
             b.setOnAction((ActionEvent event) -> {
                 playerClicked(player, team);
                 b.setDisable(true);
@@ -112,8 +132,10 @@ public class ScoringPanel extends GluonPresenter<DiscHub> {
             playerGrid.add(b, i % 4, (int) i / 4);
         }
 
-        playerGrid.add(btnCallaghan, getTeamRoster(team).length % 4, getTeamRoster(team).length / 4);
-        vbxBackingPane.getChildren().add(playerGrid);
+        playerGrid.add(btnCallaghan, 3, getTeamRoster(team).length / 4);
+        AnchorPane.setLeftAnchor(playerGrid, 0.0);
+        AnchorPane.setRightAnchor(playerGrid, 0.0);
+        ancPlayerGrid.getChildren().add(playerGrid);
     }
 
     private void playerClicked(Player p, Team team) {
@@ -122,6 +144,7 @@ public class ScoringPanel extends GluonPresenter<DiscHub> {
             //must be an assist
             tempPoint = new Point();
             tempPoint.setAssister(p);
+            lblFeedback.setText("Select the Scorer");
         } else {
             //already have an assist, so need an scorer
             if (tempPoint.getAssister() == null) {
@@ -140,9 +163,12 @@ public class ScoringPanel extends GluonPresenter<DiscHub> {
                 teamBScore++;
                 lblTeamBScore.setText(Integer.toString(teamBScore));
             }
+            lblFeedback.setText("");
             tempPoint = null;//reset the temp ready for next score
             //hide selection grid
-            vbxBackingPane.getChildren().remove(playerGrid);
+            ancPlayerGrid.getChildren().remove(playerGrid);
+            btnTeamAScore.setDisable(false);
+            btnTeamBScore.setDisable(false);
             playerGrid = null;
 
         }
