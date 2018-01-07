@@ -31,9 +31,6 @@ public class ScoringPanel extends GluonPresenter<DiscHub> {
     private Button btnTeamBScore;
 
     @FXML
-    private Button btnEndGame;
-
-    @FXML
     private Label lblTeamAScore;
 
     @FXML
@@ -44,15 +41,15 @@ public class ScoringPanel extends GluonPresenter<DiscHub> {
 
     @FXML
     private Label lblTeamBScore;
-    
+
     @FXML
     private Label lblFeedback;
 
     @FXML
-    private VBox vbxBackingPane;
+    private Label lblTime;
 
     @FXML
-    private AnchorPane ancPlayerGrid;
+    private VBox vbxPlayerGrid;
 
     private GridPane playerGrid;
 
@@ -73,6 +70,9 @@ public class ScoringPanel extends GluonPresenter<DiscHub> {
         scoringPanel.setShowTransitionFactory(BounceInRightTransition::new);
         lblTeamAName.setText(teamA.getTeamName());
         lblTeamBName.setText(teamB.getTeamName());
+
+        btnTeamAScore.setText(teamA.getTeamName() + " Score");
+        btnTeamBScore.setText(teamB.getTeamName() + " Score");
 
         teamARoster = getTeamRoster(teamA);
         teamBRoster = getTeamRoster(teamB);
@@ -115,15 +115,17 @@ public class ScoringPanel extends GluonPresenter<DiscHub> {
         lblFeedback.setText("Select the Assister");
         Button btnCallaghan = new Button("Callaghan");
         btnCallaghan.setPrefWidth(1000);
+        btnCallaghan.setPrefHeight(75);
         btnCallaghan.setOnAction((ActionEvent ae) -> {
             playerClicked(null, team);
             btnCallaghan.setDisable(true);
         });
 
-        for (int i = 0; i < getTeamRoster(team).length - 1; i++) {
+        for (int i = 0; i < getTeamRoster(team).length; i++) {
             Player player = getTeamRoster(team)[i];
             Button b = new Button(player.getShirtNum());
             b.setPrefWidth(1000);
+            b.setPrefHeight(75);
             b.setOnAction((ActionEvent event) -> {
                 playerClicked(player, team);
                 b.setDisable(true);
@@ -135,7 +137,7 @@ public class ScoringPanel extends GluonPresenter<DiscHub> {
         playerGrid.add(btnCallaghan, 3, getTeamRoster(team).length / 4);
         AnchorPane.setLeftAnchor(playerGrid, 0.0);
         AnchorPane.setRightAnchor(playerGrid, 0.0);
-        ancPlayerGrid.getChildren().add(playerGrid);
+        vbxPlayerGrid.getChildren().add(playerGrid);
     }
 
     private void playerClicked(Player p, Team team) {
@@ -166,7 +168,7 @@ public class ScoringPanel extends GluonPresenter<DiscHub> {
             lblFeedback.setText("");
             tempPoint = null;//reset the temp ready for next score
             //hide selection grid
-            ancPlayerGrid.getChildren().remove(playerGrid);
+            vbxPlayerGrid.getChildren().remove(playerGrid);
             btnTeamAScore.setDisable(false);
             btnTeamBScore.setDisable(false);
             playerGrid = null;
@@ -199,7 +201,7 @@ public class ScoringPanel extends GluonPresenter<DiscHub> {
                     i++;
                 }
             } else {
-                roster = new Player[10];
+                roster = new Player[7];
                 int i = 0;
                 for (Player p : roster) {
                     p = new Player("Heat Player " + i, Integer.toString(i + 40));

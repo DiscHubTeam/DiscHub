@@ -30,6 +30,15 @@
             </AnchorPane>
             <AnchorPane>
                <children>
+                  <HBox alignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <children>
+                        <Label fx:id="lblTime" text="00:00">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
                   <Label fx:id="lblTeamAScore" text="0">
                      <font>
                         <Font name="System Bold" size="18.0" />
@@ -58,7 +67,7 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <AnchorPane fx:id="ancPlayerGrid" prefHeight="1000.0" />
+            <VBox fx:id="vbxPlayerGrid" />
          </children>
          <padding>
             <Insets left="5.0" right="5.0" top="20.0" />
