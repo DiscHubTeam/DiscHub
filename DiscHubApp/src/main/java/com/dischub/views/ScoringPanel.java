@@ -110,6 +110,32 @@ public class ScoringPanel extends GluonPresenter<DiscHub> {
         }
     }
 
+    @FXML
+    private void undo() {
+        System.out.println("Undoing last point");
+        if (vbxPlayerGrid.getChildren().isEmpty() && teamAScore == 0 && teamBScore == 0) {
+            //Do nothing as undo has no effect
+        } else if (vbxPlayerGrid.getChildren().isEmpty()) {
+            //undo the last score
+            if (points.get(points.size() - 1).getTeam() == teamA) {
+                teamAScore--;
+                lblTeamAScore.setText(Integer.toString(teamAScore));
+            } else {
+                teamBScore--;
+                lblTeamBScore.setText(Integer.toString(teamBScore));
+            }
+            lblFeedback.setText("Score Removed");
+            points.remove(points.size() - 1);
+        } else {
+            //undo the assist.
+            tempPoint = null;
+            vbxPlayerGrid.getChildren().remove(playerGrid);
+            btnTeamAScore.setDisable(false);
+            btnTeamBScore.setDisable(false);
+            lblFeedback.setText("Cancelled");
+        }
+    }
+
     private void drawAssistGrid(Team team) {
         playerGrid = new GridPane();
         lblFeedback.setText("Select the Assister");
@@ -153,9 +179,11 @@ public class ScoringPanel extends GluonPresenter<DiscHub> {
                 //callaghan, so set score and assist as same
                 tempPoint.setAssister(p);
                 tempPoint.setScorer(p);
+                tempPoint.setTeam(team);
             } else {
                 //normal score
                 tempPoint.setScorer(p);
+                tempPoint.setTeam(team);
             }
             points.add(tempPoint);
             if (team == teamA) {

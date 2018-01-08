@@ -55,11 +55,11 @@
                <children>
                   <HBox alignment="CENTER" layoutX="70.0" layoutY="-36.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Button fx:id="btnEndGame" mnemonicParsing="false" onAction="#endGame" text="Game Over" />
+                        <Button fx:id="btnEndGame" mnemonicParsing="false" onAction="#endGame" prefHeight="50.0" text="Game Over" />
                      </children>
                   </HBox>
-                  <Button fx:id="btnTeamAScore" mnemonicParsing="false" onAction="#teamAScore" text="A Score" AnchorPane.leftAnchor="0.0" />
-                  <Button fx:id="btnTeamBScore" mnemonicParsing="false" onAction="#teamBScore" text="B Score" AnchorPane.rightAnchor="0.0" />
+                  <Button fx:id="btnTeamAScore" mnemonicParsing="false" onAction="#teamAScore" prefHeight="50.0" text="A Score" AnchorPane.leftAnchor="0.0" />
+                  <Button fx:id="btnTeamBScore" mnemonicParsing="false" onAction="#teamBScore" prefHeight="50.0" text="B Score" AnchorPane.rightAnchor="0.0" />
                </children>
             </AnchorPane>
             <Label fx:id="lblFeedback">
@@ -74,4 +74,11 @@
          </padding>
       </VBox>
    </center>
+   <bottom>
+      <HBox BorderPane.alignment="CENTER">
+         <children>
+            <Button mnemonicParsing="false" onAction="#undo" prefHeight="50.0" text="Undo" />
+         </children>
+      </HBox>
+   </bottom>
 </View>
