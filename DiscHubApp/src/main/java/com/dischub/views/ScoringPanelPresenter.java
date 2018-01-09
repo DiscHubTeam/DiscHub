@@ -10,16 +10,23 @@ import com.dischub.DiscHub;
 import com.dischub.scoring.Point;
 import com.dischub.tournament.Player;
 import com.dischub.tournament.Team;
+import com.dischub.tournament.Tournament;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
-public class ScoringPanel extends GluonPresenter<DiscHub> {
+public class ScoringPanelPresenter extends GluonPresenter<DiscHub> {
 
     @FXML
     private View scoringPanel;
@@ -59,15 +66,52 @@ public class ScoringPanel extends GluonPresenter<DiscHub> {
     private int teamAScore = 0;
     private int teamBScore = 0;
 
+    private int secsRemaining;
+
     private Player[] teamARoster;
     private Player[] teamBRoster;
 
     private Point tempPoint;
 
     private ArrayList<Point> points = new ArrayList<>();
+    private SimpleDateFormat timeFormat = new SimpleDateFormat("mm:ss");
 
     public void initialize() {
         scoringPanel.setShowTransitionFactory(BounceInRightTransition::new);
+
+        secsRemaining = getCompetitionRules().getDefaultMatchDurationSecs();
+
+        Timeline timeline = new Timeline();
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), new EventHandler() {
+
+            @Override
+            public void handle(Event event) {
+                secsRemaining--;
+
+                if (secsRemaining < 0) {
+                    if (secsRemaining % 2 == 0) {
+                        lblTime.setStyle("-fx-font-weight:bold; -fx-font-size:16;");
+                        System.out.println("A");
+                    } else {
+                        lblTime.setStyle("-fx-font-weight:normal; -fx-font-size:16;");
+                        System.out.println("B");
+                    }
+                    if (secsRemaining < -5) {
+                        timeline.stop();
+                    }
+                } else {
+                    if (secsRemaining % 60 > 9) {
+                        lblTime.setText(Integer.toString(secsRemaining / 60) + ":" + Integer.toString(secsRemaining % 60));
+                    } else {
+                        lblTime.setText(Integer.toString(secsRemaining / 60) + ":0" + Integer.toString(secsRemaining % 60));
+                    }
+                }
+            }
+
+        }));
+        timeline.playFromStart();
+
         lblTeamAName.setText(teamA.getTeamName());
         lblTeamBName.setText(teamB.getTeamName());
 
@@ -239,5 +283,9 @@ public class ScoringPanel extends GluonPresenter<DiscHub> {
             }
             return roster;
         }
+    }
+
+    private Tournament getCompetitionRules() {
+        return new Tournament(8, 20);
     }
 }
