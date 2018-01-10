@@ -13,6 +13,7 @@ import com.dischub.tournament.Team;
 import com.dischub.tournament.Tournament;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -58,6 +59,9 @@ public class ScoringPanelPresenter extends GluonPresenter<DiscHub> {
     @FXML
     private VBox vbxPlayerGrid;
 
+    @FXML
+    private ResourceBundle resources;
+
     private GridPane playerGrid;
 
     private Team teamA = new Team("Heat");
@@ -92,10 +96,8 @@ public class ScoringPanelPresenter extends GluonPresenter<DiscHub> {
                 if (secsRemaining < 0) {
                     if (secsRemaining % 2 == 0) {
                         lblTime.setStyle("-fx-font-weight:bold; -fx-font-size:16;");
-                        System.out.println("A");
                     } else {
                         lblTime.setStyle("-fx-font-weight:normal; -fx-font-size:16;");
-                        System.out.println("B");
                     }
                     if (secsRemaining < -5) {
                         timeline.stop();
@@ -115,8 +117,8 @@ public class ScoringPanelPresenter extends GluonPresenter<DiscHub> {
         lblTeamAName.setText(teamA.getTeamName());
         lblTeamBName.setText(teamB.getTeamName());
 
-        btnTeamAScore.setText(teamA.getTeamName() + " Score");
-        btnTeamBScore.setText(teamB.getTeamName() + " Score");
+        btnTeamAScore.setText(teamA.getTeamName() +" "+ resources.getString("score"));
+        btnTeamBScore.setText(teamB.getTeamName() +" "+resources.getString("score"));
 
         teamARoster = getTeamRoster(teamA);
         teamBRoster = getTeamRoster(teamB);
@@ -126,7 +128,7 @@ public class ScoringPanelPresenter extends GluonPresenter<DiscHub> {
                 AppBar appBar = getApp().getAppBar();
                 appBar.setNavIcon(MaterialDesignIcon.MENU.button(e
                         -> getApp().showLayer(DRAWER_LAYER)));
-                appBar.setTitleText("Scoring " + teamA.getTeamName() + " v " + teamB.getTeamName());
+                appBar.setTitleText(resources.getString("scoring")+" " + teamA.getTeamName() + " vs " + teamB.getTeamName());
 
             }
         });
@@ -168,7 +170,7 @@ public class ScoringPanelPresenter extends GluonPresenter<DiscHub> {
                 teamBScore--;
                 lblTeamBScore.setText(Integer.toString(teamBScore));
             }
-            lblFeedback.setText("Score Removed");
+            lblFeedback.setText(resources.getString("feedback.removed"));
             points.remove(points.size() - 1);
         } else {
             //undo the assist.
@@ -176,14 +178,14 @@ public class ScoringPanelPresenter extends GluonPresenter<DiscHub> {
             vbxPlayerGrid.getChildren().remove(playerGrid);
             btnTeamAScore.setDisable(false);
             btnTeamBScore.setDisable(false);
-            lblFeedback.setText("Cancelled");
+            lblFeedback.setText(resources.getString("feedback.cancelled"));
         }
     }
 
     private void drawAssistGrid(Team team) {
         playerGrid = new GridPane();
-        lblFeedback.setText("Select the Assister");
-        Button btnCallaghan = new Button("Callaghan");
+        lblFeedback.setText(resources.getString("feedback.assister"));
+        Button btnCallaghan = new Button(resources.getString("callaghan"));
         btnCallaghan.setPrefWidth(1000);
         btnCallaghan.setPrefHeight(75);
         btnCallaghan.setOnAction((ActionEvent ae) -> {
@@ -216,7 +218,7 @@ public class ScoringPanelPresenter extends GluonPresenter<DiscHub> {
             //must be an assist
             tempPoint = new Point();
             tempPoint.setAssister(p);
-            lblFeedback.setText("Select the Scorer");
+            lblFeedback.setText(resources.getString("feedback.scorer"));
         } else {
             //already have an assist, so need an scorer
             if (tempPoint.getAssister() == null) {
@@ -286,6 +288,6 @@ public class ScoringPanelPresenter extends GluonPresenter<DiscHub> {
     }
 
     private Tournament getCompetitionRules() {
-        return new Tournament(8, 20);
+        return new Tournament(8, /*60**/ 20);
     }
 }
