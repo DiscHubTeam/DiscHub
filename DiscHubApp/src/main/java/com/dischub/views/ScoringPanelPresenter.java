@@ -24,6 +24,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
@@ -37,6 +38,12 @@ public class ScoringPanelPresenter extends GluonPresenter<DiscHub> {
 
     @FXML
     private Button btnTeamBScore;
+
+    @FXML
+    private Button btnUndo;
+
+    @FXML
+    private Button btnEndOfGame;
 
     @FXML
     private Label lblTeamAScore;
@@ -60,9 +67,13 @@ public class ScoringPanelPresenter extends GluonPresenter<DiscHub> {
     private VBox vbxPlayerGrid;
 
     @FXML
+    private HBox hbxPreGame;
+
+    @FXML
     private ResourceBundle resources;
 
     private GridPane playerGrid;
+    private Button btnStart;
 
     private Team teamA = new Team("Heat");
     private Team teamB = new Team("Poole");
@@ -84,41 +95,51 @@ public class ScoringPanelPresenter extends GluonPresenter<DiscHub> {
         scoringPanel.setShowTransitionFactory(BounceInRightTransition::new);
 
         secsRemaining = getCompetitionRules().getDefaultMatchDurationSecs();
+        btnStart = new Button(resources.getString("start"));
+        btnStart.setPrefHeight(50);
 
-        Timeline timeline = new Timeline();
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), new EventHandler() {
+        btnStart.setOnAction((event) -> {
+            Timeline timeline = new Timeline();
+            timeline.setCycleCount(Timeline.INDEFINITE);
+            timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), new EventHandler() {
 
-            @Override
-            public void handle(Event event) {
-                secsRemaining--;
+                @Override
+                public void handle(Event event) {
+                    secsRemaining--;
 
-                if (secsRemaining < 0) {
-                    if (secsRemaining % 2 == 0) {
-                        lblTime.setStyle("-fx-font-weight:bold; -fx-font-size:16;");
+                    if (secsRemaining < 0) {
+                        if (secsRemaining % 2 == 0) {
+                            lblTime.setStyle("-fx-font-weight:bold; -fx-font-size:16;");
+                        } else {
+                            lblTime.setStyle("-fx-font-weight:normal; -fx-font-size:16;");
+                        }
+                        if (secsRemaining < -5) {
+                            timeline.stop();
+                        }
                     } else {
-                        lblTime.setStyle("-fx-font-weight:normal; -fx-font-size:16;");
-                    }
-                    if (secsRemaining < -5) {
-                        timeline.stop();
-                    }
-                } else {
-                    if (secsRemaining % 60 > 9) {
-                        lblTime.setText(Integer.toString(secsRemaining / 60) + ":" + Integer.toString(secsRemaining % 60));
-                    } else {
-                        lblTime.setText(Integer.toString(secsRemaining / 60) + ":0" + Integer.toString(secsRemaining % 60));
+                        if (secsRemaining % 60 > 9) {
+                            lblTime.setText(Integer.toString(secsRemaining / 60) + ":" + Integer.toString(secsRemaining % 60));
+                        } else {
+                            lblTime.setText(Integer.toString(secsRemaining / 60) + ":0" + Integer.toString(secsRemaining % 60));
+                        }
                     }
                 }
-            }
 
-        }));
-        timeline.playFromStart();
+            }));
+            timeline.playFromStart();
+
+            btnTeamAScore.setDisable(false);
+            btnTeamBScore.setDisable(false);
+            btnUndo.setDisable(false);
+            btnEndOfGame.setDisable(false);
+            vbxPlayerGrid.getChildren().remove(hbxPreGame);
+        });
 
         lblTeamAName.setText(teamA.getTeamName());
         lblTeamBName.setText(teamB.getTeamName());
 
-        btnTeamAScore.setText(teamA.getTeamName() +" "+ resources.getString("score"));
-        btnTeamBScore.setText(teamB.getTeamName() +" "+resources.getString("score"));
+        btnTeamAScore.setText(teamA.getTeamName() + " " + resources.getString("score"));
+        btnTeamBScore.setText(teamB.getTeamName() + " " + resources.getString("score"));
 
         teamARoster = getTeamRoster(teamA);
         teamBRoster = getTeamRoster(teamB);
@@ -128,10 +149,22 @@ public class ScoringPanelPresenter extends GluonPresenter<DiscHub> {
                 AppBar appBar = getApp().getAppBar();
                 appBar.setNavIcon(MaterialDesignIcon.MENU.button(e
                         -> getApp().showLayer(DRAWER_LAYER)));
-                appBar.setTitleText(resources.getString("scoring")+" " + teamA.getTeamName() + " vs " + teamB.getTeamName());
+                appBar.setTitleText(resources.getString("scoring") + " " + teamA.getTeamName() + " vs " + teamB.getTeamName());
 
             }
         });
+    }
+
+    @FXML
+    private void cancelScoring() {
+        AppViewManager.PRIMARY_VIEW.switchView();
+    }
+
+    @FXML
+    private void agreeToScoreGame() {
+        //show the start timer button, clear other pre-game items
+        hbxPreGame.getChildren().remove(0, hbxPreGame.getChildrenUnmodifiable().size());
+        hbxPreGame.getChildren().add(btnStart);
     }
 
     @FXML

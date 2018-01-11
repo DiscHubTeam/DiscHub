@@ -55,11 +55,11 @@
                <children>
                   <HBox alignment="CENTER" layoutX="70.0" layoutY="-36.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Button fx:id="btnEndGame" mnemonicParsing="false" onAction="#endGame" prefHeight="50.0" text="%game.over" />
+                        <Button fx:id="btnEndOfGame" disable="true" mnemonicParsing="false" onAction="#endGame" prefHeight="50.0" text="%game.over" />
                      </children>
                   </HBox>
-                  <Button fx:id="btnTeamAScore" mnemonicParsing="false" onAction="#teamAScore" prefHeight="50.0" text="A Score" AnchorPane.leftAnchor="0.0" />
-                  <Button fx:id="btnTeamBScore" mnemonicParsing="false" onAction="#teamBScore" prefHeight="50.0" text="B Score" AnchorPane.rightAnchor="0.0" />
+                  <Button fx:id="btnTeamAScore" disable="true" mnemonicParsing="false" onAction="#teamAScore" prefHeight="50.0" text="A Score" AnchorPane.leftAnchor="0.0" />
+                  <Button fx:id="btnTeamBScore" disable="true" mnemonicParsing="false" onAction="#teamBScore" prefHeight="50.0" text="B Score" AnchorPane.rightAnchor="0.0" />
                </children>
             </AnchorPane>
             <Label fx:id="lblFeedback">
@@ -67,7 +67,15 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <VBox fx:id="vbxPlayerGrid" />
+            <VBox fx:id="vbxPlayerGrid">
+               <children>
+                  <HBox fx:id="hbxPreGame" alignment="CENTER" spacing="30.0">
+                     <children>
+                        <Button fx:id="btnScoreThisGame" mnemonicParsing="false" onAction="#agreeToScoreGame" prefHeight="50.0" text="%score.match" />
+                        <Button fx:id="btnCancelScoring" mnemonicParsing="false" onAction="#cancelScoring" prefHeight="50.0" text="%score.match.cancel" />
+                     </children>
+                  </HBox>
+               </children></VBox>
          </children>
          <padding>
             <Insets left="5.0" right="5.0" top="20.0" />
@@ -77,7 +85,7 @@
    <bottom>
       <HBox BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" onAction="#undo" prefHeight="50.0" text="%undo" />
+            <Button fx:id="btnUndo" disable="true" mnemonicParsing="false" onAction="#undo" prefHeight="50.0" text="%undo" />
          </children>
       </HBox>
    </bottom>
