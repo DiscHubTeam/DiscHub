@@ -23,6 +23,7 @@ public class AppViewManager {
     public static final AppView PRIMARY_VIEW = view("Primary", PrimaryPresenter.class, MaterialDesignIcon.HOME, SHOW_IN_DRAWER, SKIP_VIEW_STACK);
     public static final AppView SECONDARY_VIEW = view("Secondary", SecondaryPresenter.class, MaterialDesignIcon.DASHBOARD, SHOW_IN_DRAWER);
     public static final AppView CREATE_ACCOUNT_VIEW = view("CreateLogin",CreateAccountPresenter.class,MaterialDesignIcon.ACCOUNT_CIRCLE,SKIP_VIEW_STACK);
+    public static final AppView SCORING_VIEW = view("Scoring Panel",ScoringPanelPresenter.class, MaterialDesignIcon.GAMES,SHOW_IN_DRAWER);
     
     private static AppView view(String title, Class<? extends GluonPresenter<?>> presenterClass, MaterialDesignIcon menuIcon, AppView.Flag... flags ) {
         return REGISTRY.createView(name(presenterClass), title, presenterClass, menuIcon, flags);

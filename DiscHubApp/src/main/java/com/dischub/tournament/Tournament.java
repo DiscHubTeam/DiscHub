@@ -10,6 +10,7 @@ public class Tournament {
 
     private final int amountOfTeams;
     private ArrayList<Team> teams;
+    private int defaultMatchDurationSecs;
 
     /**
      *
@@ -17,6 +18,16 @@ public class Tournament {
      */
     public Tournament(int amountOfTeams) {
         this.amountOfTeams = amountOfTeams;
+    }
+    
+    /**
+     *
+     * @param amountOfTeams
+     * @param matchDurationSecs
+     */
+    public Tournament(int amountOfTeams, int matchDurationSecs) {
+        this.amountOfTeams = amountOfTeams;
+        this.defaultMatchDurationSecs = matchDurationSecs;
     }
 
     /**
@@ -43,5 +54,19 @@ public class Tournament {
      */
     public ArrayList<Team> getTournamentTeamList() {
         return teams;
+    }
+
+    /**
+     * @return the defaultMatchDurationSecs
+     */
+    public int getDefaultMatchDurationSecs() {
+        return defaultMatchDurationSecs;
+    }
+
+    /**
+     * @param defaultMatchDurationSecs the defaultMatchDurationSecs to set
+     */
+    public void setDefaultMatchDurationSecs(int defaultMatchDurationSecs) {
+        this.defaultMatchDurationSecs = defaultMatchDurationSecs;
     }
 }
