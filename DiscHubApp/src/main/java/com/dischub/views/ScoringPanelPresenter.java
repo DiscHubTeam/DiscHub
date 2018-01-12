@@ -70,7 +70,7 @@ public class ScoringPanelPresenter extends GluonPresenter<DiscHub> {
     private HBox hbxPreGame;
 
     @FXML
-    private ResourceBundle resources;
+    private ResourceBundle resources; //pulls the strings in from .properties file
 
     private GridPane playerGrid;
     private Button btnStart;
@@ -95,6 +95,7 @@ public class ScoringPanelPresenter extends GluonPresenter<DiscHub> {
         scoringPanel.setShowTransitionFactory(BounceInRightTransition::new);
 
         secsRemaining = getCompetitionRules().getDefaultMatchDurationSecs();
+        lblTime.setText(Integer.toString(secsRemaining));
         btnStart = new Button(resources.getString("start"));
         btnStart.setPrefHeight(50);
 
@@ -108,15 +109,19 @@ public class ScoringPanelPresenter extends GluonPresenter<DiscHub> {
                     secsRemaining--;
 
                     if (secsRemaining < 0) {
+                        //if out of time, make the clock flash for a few seconds'
                         if (secsRemaining % 2 == 0) {
                             lblTime.setStyle("-fx-font-weight:bold; -fx-font-size:16;");
                         } else {
                             lblTime.setStyle("-fx-font-weight:normal; -fx-font-size:16;");
                         }
+
                         if (secsRemaining < -5) {
                             timeline.stop();
                         }
+
                     } else {
+                        //time remaining to format properly, concat a 0 if the seconds is <9 avoiding eg: 14:5
                         if (secsRemaining % 60 > 9) {
                             lblTime.setText(Integer.toString(secsRemaining / 60) + ":" + Integer.toString(secsRemaining % 60));
                         } else {
@@ -124,7 +129,6 @@ public class ScoringPanelPresenter extends GluonPresenter<DiscHub> {
                         }
                     }
                 }
-
             }));
             timeline.playFromStart();
 
@@ -171,14 +175,14 @@ public class ScoringPanelPresenter extends GluonPresenter<DiscHub> {
     private void teamAScore() {
         btnTeamAScore.setDisable(true);
         btnTeamBScore.setDisable(true);
-        drawAssistGrid(teamA);
+        drawPlayerSelectionGrid(teamA);
     }
 
     @FXML
     private void teamBScore() {
         btnTeamAScore.setDisable(true);
         btnTeamBScore.setDisable(true);
-        drawAssistGrid(teamB);
+        drawPlayerSelectionGrid(teamB);
     }
 
     @FXML
@@ -193,9 +197,9 @@ public class ScoringPanelPresenter extends GluonPresenter<DiscHub> {
     private void undo() {
         System.out.println("Undoing last point");
         if (vbxPlayerGrid.getChildren().isEmpty() && teamAScore == 0 && teamBScore == 0) {
-            //Do nothing as undo has no effect
+            //Do nothing as undo has no effect on a 0-0 game with no player selected
         } else if (vbxPlayerGrid.getChildren().isEmpty()) {
-            //undo the last score
+            //we're not selecting a player, so undo the entire last score
             if (points.get(points.size() - 1).getTeam() == teamA) {
                 teamAScore--;
                 lblTeamAScore.setText(Integer.toString(teamAScore));
@@ -206,7 +210,7 @@ public class ScoringPanelPresenter extends GluonPresenter<DiscHub> {
             lblFeedback.setText(resources.getString("feedback.removed"));
             points.remove(points.size() - 1);
         } else {
-            //undo the assist.
+            //we're mid-score, so better undo the assister, not the previous point.
             tempPoint = null;
             vbxPlayerGrid.getChildren().remove(playerGrid);
             btnTeamAScore.setDisable(false);
@@ -215,15 +219,16 @@ public class ScoringPanelPresenter extends GluonPresenter<DiscHub> {
         }
     }
 
-    private void drawAssistGrid(Team team) {
+    private void drawPlayerSelectionGrid(Team team) {
         playerGrid = new GridPane();
         lblFeedback.setText(resources.getString("feedback.assister"));
         Button btnCallaghan = new Button(resources.getString("callaghan"));
         btnCallaghan.setPrefWidth(1000);
         btnCallaghan.setPrefHeight(75);
+        //special case: callaghan is like an own goal, the intercepting catcher is accredited with both score and assist
         btnCallaghan.setOnAction((ActionEvent ae) -> {
             playerClicked(null, team);
-            btnCallaghan.setDisable(true);
+            btnCallaghan.setDisable(true);//if a callaghan is scored, you must select the scorer
         });
 
         for (int i = 0; i < getTeamRoster(team).length; i++) {
@@ -233,13 +238,13 @@ public class ScoringPanelPresenter extends GluonPresenter<DiscHub> {
             b.setPrefHeight(75);
             b.setOnAction((ActionEvent event) -> {
                 playerClicked(player, team);
-                b.setDisable(true);
-                btnCallaghan.setDisable(true);
+                b.setDisable(true);//player can't assist and then score (see callaghan above)
+                btnCallaghan.setDisable(true);//if there is an assister, can't be a callaghan
             });
             playerGrid.add(b, i % 4, (int) i / 4);
         }
 
-        playerGrid.add(btnCallaghan, 3, getTeamRoster(team).length / 4);
+        playerGrid.add(btnCallaghan, 3, getTeamRoster(team).length / 4);//far-right button on bottom row is always callaghan
         AnchorPane.setLeftAnchor(playerGrid, 0.0);
         AnchorPane.setRightAnchor(playerGrid, 0.0);
         vbxPlayerGrid.getChildren().add(playerGrid);
@@ -248,9 +253,9 @@ public class ScoringPanelPresenter extends GluonPresenter<DiscHub> {
     private void playerClicked(Player p, Team team) {
 
         if (tempPoint == null) {
-            //must be an assist
+            //is null and thus must be an assist
             tempPoint = new Point();
-            tempPoint.setAssister(p);
+            tempPoint.setAssister(p);//p is null for callaghan, but as temppoint is not null, this block will not be executed again
             lblFeedback.setText(resources.getString("feedback.scorer"));
         } else {
             //already have an assist, so need an scorer
@@ -264,7 +269,9 @@ public class ScoringPanelPresenter extends GluonPresenter<DiscHub> {
                 tempPoint.setScorer(p);
                 tempPoint.setTeam(team);
             }
+
             points.add(tempPoint);
+
             if (team == teamA) {
                 teamAScore++;
                 lblTeamAScore.setText(Integer.toString(teamAScore));
@@ -272,16 +279,15 @@ public class ScoringPanelPresenter extends GluonPresenter<DiscHub> {
                 teamBScore++;
                 lblTeamBScore.setText(Integer.toString(teamBScore));
             }
+
             lblFeedback.setText("");
             tempPoint = null;//reset the temp ready for next score
             //hide selection grid
             vbxPlayerGrid.getChildren().remove(playerGrid);
-            btnTeamAScore.setDisable(false);
+            btnTeamAScore.setDisable(false);//enable the user to log another score
             btnTeamBScore.setDisable(false);
             playerGrid = null;
-
         }
-
     }
 
     /**
@@ -292,6 +298,8 @@ public class ScoringPanelPresenter extends GluonPresenter<DiscHub> {
      * @return an array of players (aka a roster)
      */
     private Player[] getTeamRoster(Team team) {
+        //Note: currently generates an array of players if roster not held locally.
+        //This is a temporary measure for testing purposes
         if (team == teamA && teamARoster != null) {
             return teamARoster;
         } else if (team == teamB && teamBRoster != null) {
@@ -321,6 +329,8 @@ public class ScoringPanelPresenter extends GluonPresenter<DiscHub> {
     }
 
     private Tournament getCompetitionRules() {
+        //This either needs to be passed as a parameter (as with teams) or held as a static variable.
+        // This is hardcoded at 20secs for testing
         return new Tournament(8, /*60**/ 20);
     }
 }
