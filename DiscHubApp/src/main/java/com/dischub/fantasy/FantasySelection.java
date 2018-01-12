@@ -1,6 +1,5 @@
 package com.dischub.fantasy;
 
-import com.dischub.tournament.CompetitionRules;
 import com.dischub.tournament.Gender;
 import com.dischub.tournament.Player;
 import com.dischub.tournament.Team;
